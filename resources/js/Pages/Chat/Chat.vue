@@ -1,23 +1,38 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import {Head, useForm, usePage} from '@inertiajs/vue3';
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 const showingSidebar = ref(true); // Set to true by default to show the sidebar
 
 // Static user data for demonstration
-const users = ref([
-    { id: 1, name: 'User 1' },
-    { id: 2, name: 'User 2' },
-    // Add more users as needed
-]);
+const user = usePage().props.auth.user;
 
-// Define selectedUser and messageInput
+
+
+
+defineProps({
+    users: {
+        type: Array,
+        default: () => [],
+    },
+});
+
+// Define selectedUser
 const selectedUser = ref(null);
-const messageInput = ref('');
 
+const form = useForm({
+    content: '',
+    receiver_id: ''
+});
+
+const submit = () => {
+    form.post(route('private-message.create'))
+}
 // Function to select a user
 function selectUser(user) {
+    form.receiver_id = user.id
     selectedUser.value = user;
 }
 
@@ -47,10 +62,7 @@ function sendMessage() {
                     <span>{{ user.name }}</span>
                 </li>
             </ul>
-            <!-- Add a close icon -->
-            <button @click="showingSidebar = false" class="mt-4 focus:outline-none">
-                <svg class="w-6 h-6 text-gray-300 hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
+
         </div>
 
         <!-- Main Content -->
@@ -72,12 +84,29 @@ function sendMessage() {
                                 </div>
                                 <!-- Message Display Area -->
                                 <div class="border border-gray-300 rounded-lg p-4 mb-4" style="max-height: 300px; overflow-y: auto;">
-                                    <!-- Messages will be displayed here -->
+                                    <!-- Displaying messages -->
+                                    <div v-for="message in selectedUser.receiver" :key="message.id" class="mb-2">
+                                        <!-- Sender's information -->
+                                        <div class="flex items-center mb-1">
+                                            <!-- Placeholder for profile picture -->
+                                            <div class="h-6 w-6 rounded-full overflow-hidden bg-gradient-to-br from-blue-400 to-purple-600"></div>
+                                            <!-- Sender's name -->
+                                            <span class="ml-2 font-semibold">{{ message.sender }}</span>
+                                        </div>
+                                        <!-- Message content -->
+                                        <div>{{ message.content }}</div>
+                                    </div>
                                 </div>
+
                                 <!-- Message Input -->
-                                <textarea v-model="messageInput" rows="3" class="w-full border border-gray-300 text-black rounded-lg p-2 mb-2" placeholder="Type your message..."></textarea>
-                                <!-- Send Button -->
-                                <button @click="sendMessage" class="bg-blue-500 text-black px-4 py-2 rounded-lg hover:bg-blue-600">Send</button>
+                                <form @submit.prevent="submit">
+                                    <textarea id="content" v-model="form.content" rows="3" class="w-full border border-gray-300 text-black rounded-lg p-2 mb-2" placeholder="Type your message..."></textarea>
+                                    <!-- Send Button -->
+                                    <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                                        Register
+                                    </PrimaryButton>
+                                </form>
+
                             </div>
                             <!-- If no user is selected, show a message -->
                             <div v-else>

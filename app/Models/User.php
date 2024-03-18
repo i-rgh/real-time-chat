@@ -44,4 +44,16 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+
+    public function receiver()
+    {
+        return $this->hasMany(PrivateMessage::class,'receiver_id');
+    }
+
+
+    public function sender()
+    {
+        return $this->hasMany(PrivateMessage::class,'sender_id');
+    }
 }
