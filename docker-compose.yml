@@ -10,6 +10,7 @@ services:
       - ./:/var/www
     ports:
       - "9000:9000"
+      - "8080:8080"
     working_dir: /var/www
     environment:
       DB_HOST: chat-db
@@ -26,6 +27,7 @@ services:
       test: ["CMD-SHELL", "pg_isready -q -U ${DB_USERNAME} -d ${DB_DATABASE}"]
       interval: 10s
       retries: 5
+
 
   nginx:
     image: nginx:latest

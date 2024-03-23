@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ChatController;
 use \App\Http\Controllers\PrivateMessageController;
+use \App\Http\Controllers\MessageController;
+use \App\Http\Controllers\ChatRoomController;
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -32,8 +34,17 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('chat' , [ChatController::class, 'show'])->name('chat');
+    Route::resource('private-chat' , PrivateMessageController::class)
+        ->except('update', 'delete', 'edit', 'index');
 
-    Route::post('private-message' , [PrivateMessageController::class, 'send'])->name('private-message.create');
+
+    Route::prefix('chat-room')->name('chat-room.')->group(function () {
+        Route::resource('/', ChatRoomController::class)
+            ->except('update', 'delete', 'edit');
+        Route::post('/message', [MessageController::class,'store'])->name('message.store');
+    });
+
+
 
 
 });

@@ -48,12 +48,19 @@ class User extends Authenticatable
 
     public function receiver()
     {
-        return $this->hasMany(PrivateMessage::class,'receiver_id');
+        return $this->hasMany(PrivateMessage::class,'receiver_id')
+            ->where('receiver_id' , );
     }
 
 
     public function sender()
     {
-        return $this->hasMany(PrivateMessage::class,'sender_id');
+        return $this->hasMany(PrivateMessage::class);
     }
+
+    public static function getUsersExpectMe()
+    {
+        return self::all()->where('id', '!=', auth()->user()->id);
+    }
+
 }

@@ -32,14 +32,17 @@ RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl pdo_pgsql gd
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Create a system user to run Composer and Artisan commands
-RUN groupadd -g 1000 www
-RUN useradd -u 1000 -ms /bin/bash -g www www
+RUN addgroup --gid 1000 laravel \
+    && adduser --ingroup laravel --shell /bin/sh laravel
 
-# Copy existing application files
-COPY --chown=www:www . .
+# Copy existing application directory permissions
+COPY --chown=www-data:www-data . /var/www
 
-# Change current user to www
-USER www
+# Set permissions for storage directory
+RUN chmod -R 775 storage
+
+# Switch to the laravel user
+USER laravel
 
 # Expose port 9000 (if necessary, adjust according to your setup)
 EXPOSE 9000
