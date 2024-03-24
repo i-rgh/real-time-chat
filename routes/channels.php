@@ -11,6 +11,6 @@ Broadcast::channel('MessageSend.{receiverId}', function ($user,   $receiverId) {
     return $user->id == $receiverId;
 });
 
-Broadcast::channel('chat-room.{chatRoomId}', function ($user,   $chatRoomId) {
+Broadcast::channel('ChatRoom.{chatRoomId}', function ($user,   $chatRoomId) {
    return true;
 });

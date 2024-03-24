@@ -49,7 +49,7 @@ function selectRoom(room: Room) {
 
     console.log("Rooooms", selectedRoom.value.data.id)
 
-    window.Echo.channel(`chat-room.${selectedRoom.value?.data.id}`)
+    window.Echo.channel(`ChatRoom.${selectedRoom.value?.data.id}`)
         .listen('ChatRoomMessageSend', (event: any) => {
             selectedRoom.value.data.messages.push(event.message)
         });

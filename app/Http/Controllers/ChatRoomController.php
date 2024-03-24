@@ -38,9 +38,6 @@ class ChatRoomController extends Controller
     public function store(CreateChatRoomRequest $request): \Illuminate\Http\RedirectResponse
     {
         $room = Room::create($request->all());
-        $room->users()->attach([
-            'user_id' => auth()->id()
-        ]);
         return Redirect::route('chat-room.index');
     }
 
