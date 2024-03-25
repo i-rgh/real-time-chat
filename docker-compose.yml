@@ -10,7 +10,7 @@ services:
       - ./:/var/www
     ports:
       - "9000:9000"
-      - "8080:8080"
+    image: chat-app
     working_dir: /var/www
     environment:
       DB_HOST: chat-db
@@ -27,7 +27,6 @@ services:
       test: ["CMD-SHELL", "pg_isready -q -U ${DB_USERNAME} -d ${DB_DATABASE}"]
       interval: 10s
       retries: 5
-
 
   nginx:
     image: nginx:latest
@@ -56,6 +55,34 @@ services:
       - "5480:5432"
     networks:
       - chat_network
+
+  queue:
+    image: chat-app
+    container_name: laravel-queue
+    volumes:
+      - .:/var/www
+    depends_on:
+      - app
+    environment:
+      APP_ENV: local
+      CONTAINER_ROLE: queue
+    networks:
+     - chat_network
+
+  reverb:
+   image: chat-app
+   container_name: laravel-reverb
+   ports:
+   - "8080:8080"
+   volumes:
+     - .:/var/www
+   depends_on:
+     - app
+   environment:
+    APP_ENV: local
+    CONTAINER_ROLE: reverb
+   networks:
+     - chat_network
 
 networks:
   chat_network:
