@@ -10,7 +10,10 @@ defineProps({
         type: Array as () => Room[],
         required: true
     },
-    selectRoom: Function
+    selectRoom: {
+        type: Function,
+        default: null
+    }
 });
 </script>
 

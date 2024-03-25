@@ -51,7 +51,7 @@ function selectRoom(room: Room) {
 
     window.Echo.channel(`ChatRoom.${selectedRoom.value?.data.id}`)
         .listen('ChatRoomMessageSend', (event: any) => {
-            selectedRoom.value.data.messages.push(event.message)
+            selectedRoom.value?.data.messages.push(event.message)
         });
 
 
@@ -87,7 +87,7 @@ function selectRoom(room: Room) {
 
 
         <!-- Sidebar -->
-        <RoomList :rooms="rooms" :selectRoom="selectRoom"> </RoomList>
+        <RoomList :rooms="rooms as Room[]" :selectRoom="selectRoom"> </RoomList>
 
         <!-- Main Content -->
         <div class="ml-64">

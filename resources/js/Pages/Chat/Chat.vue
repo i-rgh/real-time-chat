@@ -70,7 +70,7 @@ window.Echo.private(`MessageSend.${me.id}`)
         </template>Chat
 
         <!-- Sidebar -->
-        <UserList :users="users" :selectUser="selectUser"> </UserList>
+        <UserList :users="users as User[]" :selectUser="selectUser"> </UserList>
 
         <!-- Main Content -->
         <div class="ml-64">
